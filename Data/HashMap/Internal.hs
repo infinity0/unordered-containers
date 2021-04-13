@@ -876,7 +876,7 @@ insertKeyExists !collPos0 !h0 !k0 x0 !m0 = go collPos0 h0 k0 x0 0 m0
         = Leaf h (L k x)
     go collPos h k x s (BitmapIndexed b ary)
         | b .&. m == 0 =
-            let !ary' = A.insert ary i $ Leaf h (L k x)
+            let !ary' = A.insert ary i $! Leaf h (L k x)
             in bitmapIndexedOrFull (b .|. m) ary'
         | otherwise =
             let !st  = A.index ary i
@@ -900,7 +900,7 @@ insertKeyExists !collPos0 !h0 !k0 x0 !m0 = go collPos0 h0 k0 x0 0 m0
 --
 -- This does not check that @i@ is within bounds of the array.
 setAtPosition :: Int -> k -> v -> A.Array (Leaf k v) -> A.Array (Leaf k v)
-setAtPosition i k x ary = A.update ary i (L k x)
+setAtPosition i k x ary = A.update ary i $! L k x
 {-# INLINE setAtPosition #-}
 
 
@@ -1600,7 +1600,7 @@ unionWithKey f = go 0
         in Full ary'
     -- leaf vs. branch
     go s (BitmapIndexed b1 ary1) t2
-        | b1 .&. m2 == 0 = let ary' = A.insert ary1 i t2
+        | b1 .&. m2 == 0 = let ary' = A.insert ary1 i $! t2
                                b'   = b1 .|. m2
                            in bitmapIndexedOrFull b' ary'
         | otherwise      = let ary' = A.updateWith' ary1 i $ \st1 ->
